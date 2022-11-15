@@ -4,7 +4,7 @@
 const express = require("express");
 
 // Import du package cors pour activer CORS avec les diverses options
-var cors = require("cors");
+const cors = require("cors");
 
 // Import de body-parser pour pouvoir lire les requêtes POST
 const bodyParser = require("body-parser");
