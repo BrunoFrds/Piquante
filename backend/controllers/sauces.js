@@ -72,10 +72,20 @@ exports.getOneSauce = (req, res, next) => {
 // Création et export de la fonction pour gérer la route PUT pour modifier une sauce existante
 // Utilisation de ":" en face du segment dynamique pour la rendre accessible en tant que paramètre
 exports.modifySauce = (req, res, next) => {
-  // On regarde si un champs "file" (image) existe ou non
-  const sauceObject = req.file
-    ? {
-        // Si oui, récupération de l'objet en parsant la chaîne de caractères
+  let sauceObject = {};
+  req.file
+    ? // On regarde si un champs "file" (image) existe ou non
+      (modelSauce
+        .findOne({
+          _id: req.params.id,
+        })
+        .then((sauce) => {
+          // Si une image existe, on supprime l'ancienne image
+          const filename = sauce.imageUrl.split("/images/")[1];
+          fs.unlinkSync(`images/${filename}`);
+        }),
+      (sauceObject = {
+        // On modifie les données et on ajoute la nouvelle image
         ...JSON.parse(req.body.sauce),
         // On recrée l'URL de l'image
         // req.protocol : pour obtenir le premier segment "http"
@@ -86,7 +96,7 @@ exports.modifySauce = (req, res, next) => {
         imageUrl: `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
         }`,
-      } // Si non, récupération de l'objet directement dans le corps de la requête
+      })) // Si non, récupération de l'objet directement dans le corps de la requête
     : { ...req.body };
   // Utilisation de la méthode "updateOne()" de Mongoose pour modifier la sauce
   modelSauce

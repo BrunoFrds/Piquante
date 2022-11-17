@@ -15,7 +15,7 @@ const mongoose = require("mongoose");
 // Acces au path du serveur
 const path = require("path");
 
-// Import de Dotenv
+// Import de Dotenv pour masquer le nom d'utilisateur et le mdp lors de la connection à la base de données
 require("dotenv").config();
 
 // Import des routes sauces.js
